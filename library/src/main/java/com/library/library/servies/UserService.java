@@ -20,4 +20,8 @@ public class UserService {
     public List<UserResponse> getAll() {
         return userRepository.findAll().stream(). map(x->modelMapper.map(x, UserResponse.class)).toList();
     }
+
+    public UserResponse getUser(int id) {
+        return modelMapper.map(userRepository.findById(id).get(), UserResponse.class);
+    }
 }
