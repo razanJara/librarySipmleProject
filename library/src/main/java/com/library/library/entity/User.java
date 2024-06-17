@@ -21,4 +21,7 @@ public class User {
     @Column(name = "status")
     private Boolean status = true;
 
+    @Column(name = "fine")
+    private Double fine;
+
 }
