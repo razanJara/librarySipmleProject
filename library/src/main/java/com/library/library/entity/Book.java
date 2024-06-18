@@ -3,11 +3,12 @@ package com.library.library.entity;
 import com.library.library.Enum.CategoryEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "book")
 public class Book {
