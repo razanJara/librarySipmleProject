@@ -1,6 +1,7 @@
 package com.library.library.controller;
 
 import com.library.library.dto.request.AuthorRequest;
+import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.AuthorResponse;
 import com.library.library.servies.AuthorService;
 import jakarta.validation.Valid;
@@ -29,5 +30,10 @@ public class AuthorController {
     @GetMapping("/{author_id}")
     public ResponseEntity<AuthorResponse> getAuthor(@PathVariable("author_id") int id){
         return ResponseEntity.ok().body(authorService.getAuthor(id));
+    }
+    @PutMapping("/update/{author_id}")
+    public ResponseEntity<String> updateName(@PathVariable("author_id") int id, @Valid @RequestBody NameRequest nameRequest){
+        authorService.updateName(id, nameRequest);
+        return ResponseEntity.ok().body("done");
     }
 }

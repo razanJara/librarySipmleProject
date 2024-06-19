@@ -2,6 +2,7 @@ package com.library.library.servies;
 
 import com.library.library.dto.request.AuthorRequest;
 import com.library.library.dto.request.BookRequest;
+import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.AuthorResponse;
 import com.library.library.entity.Author;
 import com.library.library.entity.Book;
@@ -51,5 +52,11 @@ public class AuthorService {
         AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
         authorResponse.setNumberOfBooks(author.getBooks().size());
         return authorResponse;
+    }
+
+    public void updateName(int id, NameRequest nameRequest) {
+        Author author = authorRepository.findById(id).get();
+        author.setName(nameRequest.getName());
+        authorRepository.save(author);
     }
 }

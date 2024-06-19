@@ -2,7 +2,7 @@ package com.library.library.controller;
 
 import com.library.library.dto.request.StatusRequest;
 import com.library.library.dto.response.UserResponse;
-import com.library.library.dto.request.UserRequest;
+import com.library.library.dto.request.NameRequest;
 import com.library.library.servies.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -30,12 +30,12 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUser(id));
     }
     @PostMapping("/new")
-    public ResponseEntity<UserResponse> createNewUser(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> createNewUser(@Valid @RequestBody NameRequest userRequest) {
         UserResponse userResponse = userService.createNewUser(userRequest);
         return ResponseEntity.ok().body(userResponse);
     }
     @PutMapping("/update/{user_id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable("user_id") int id, @Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable("user_id") int id, @Valid @RequestBody NameRequest userRequest) {
         UserResponse userResponse = userService.updateUser(id, userRequest);
         return ResponseEntity.ok().body(userResponse);
     }
@@ -43,5 +43,13 @@ public class UserController {
     public ResponseEntity<UserResponse> updateStatus(@PathVariable("user_id") int id, @Valid @RequestBody StatusRequest statusRequest){
         UserResponse userResponse = userService.updateStatus(id, statusRequest);
         return ResponseEntity.ok().body(userResponse);
+    }
+    @PutMapping("{user_id}/borrow/{book_id}")
+    public ResponseEntity<UserResponse> borrowBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId){
+        return ResponseEntity.ok().body(userService.borrowBook(userId, bookId));
+    }
+    @PutMapping("{user_id}/return/{book_id}")
+    public ResponseEntity<String> returnBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId){
+        return ResponseEntity.ok().body(userService.returnBook(userId, bookId));
     }
 }
