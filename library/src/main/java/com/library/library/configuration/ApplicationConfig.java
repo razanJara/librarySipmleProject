@@ -21,6 +21,7 @@ public class ApplicationConfig {
 
         TypeMap<Book, BookResponse> bookTypeMap = modelMapper.createTypeMap(Book.class, BookResponse.class);
         bookTypeMap.addMapping(src->src.getAuthor().getId(), BookResponse:: setAuthorId);
+
         return modelMapper;
     }
 }

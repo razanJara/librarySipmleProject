@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -20,7 +23,7 @@ public class User {
     @Column(name = "status")
     private Boolean status = true;
 
-    @Column(name = "fine")
-    private Double fine;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Book> books = new ArrayList<>();
 
 }

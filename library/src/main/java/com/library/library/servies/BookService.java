@@ -1,6 +1,7 @@
 package com.library.library.servies;
 
 import com.library.library.dto.request.BookRequest;
+import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.BookResponse;
 import com.library.library.entity.Book;
 import com.library.library.repository.AuthorRepository;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +32,17 @@ public class BookService {
     public BookResponse getBook(int id) {
         Book book = bookRepository.findById(id).get();
         return modelMapper.map(book, BookResponse.class);
+    }
+
+    public List<BookResponse> getAll() {
+        return bookRepository.findAll()
+                .stream()
+                .map(book -> modelMapper.map(book, BookResponse.class))
+                .toList();
+    }
+    public void updateName(int id, NameRequest nameRequest) {
+        Book book = bookRepository.findById(id).get();
+        book.setName(nameRequest.getName());
+        bookRepository.save(book);
     }
 }
