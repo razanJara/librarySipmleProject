@@ -7,6 +7,7 @@ import com.library.library.dto.response.BookResponse;
 import com.library.library.dto.response.UserResponse;
 import com.library.library.entity.Book;
 import com.library.library.entity.User;
+import com.library.library.exception.CustomException;
 import com.library.library.repository.BookRepository;
 import com.library.library.repository.UserRepository;
 import lombok.AccessLevel;
@@ -73,11 +74,11 @@ public class UserService {
         return getUserResponse(savedBook.getUser());
     }
 
-    public String returnBook(int userId, int bookId){
-        Book book = bookRepository.findById(bookId).get();
+    public String returnBook(int userId, int bookId) throws CustomException{
+        Book book = bookRepository.findById(bookId).orElseThrow(()-> new CustomException("Book id not found", 400));
         book.setAvailable(true);
         book.setUser(null);
-        Book savedBook = bookRepository.save(book);
+        bookRepository.save(book);
         return "done";
     }
 }

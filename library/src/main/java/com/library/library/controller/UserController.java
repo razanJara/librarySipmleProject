@@ -3,6 +3,7 @@ package com.library.library.controller;
 import com.library.library.dto.request.StatusRequest;
 import com.library.library.dto.response.UserResponse;
 import com.library.library.dto.request.NameRequest;
+import com.library.library.exception.CustomException;
 import com.library.library.servies.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -49,7 +50,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.borrowBook(userId, bookId));
     }
     @PutMapping("{user_id}/return/{book_id}")
-    public ResponseEntity<String> returnBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId){
+    public ResponseEntity<String> returnBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId) throws CustomException {
         return ResponseEntity.ok().body(userService.returnBook(userId, bookId));
     }
 }
