@@ -1,6 +1,7 @@
 package com.library.library.controller;
 
 import com.library.library.dto.request.StatusRequest;
+import com.library.library.dto.response.GeneralResponse;
 import com.library.library.dto.response.UserResponse;
 import com.library.library.dto.request.NameRequest;
 import com.library.library.exception.CustomException;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +24,13 @@ public class UserController {
     UserService userService;
 
     @GetMapping("list")
-    public ResponseEntity<List<UserResponse>> list() {
-        return ResponseEntity.ok().body(userService.getAll());
+    public ResponseEntity<GeneralResponse<List<UserResponse>>> list() {
+        return ResponseEntity.ok().body(new GeneralResponse<>(userService.getAll()));
     }
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<UserResponse> get(@PathVariable("user_id") int id) {
-        return ResponseEntity.ok().body(userService.getUser(id));
+    public ResponseEntity<GeneralResponse<UserResponse>> get(@PathVariable("user_id") int id) {
+        return ResponseEntity.ok().body((new GeneralResponse<>(userService.getUser(id))));
     }
     @PostMapping("/new")
     public ResponseEntity<UserResponse> createNewUser(@Valid @RequestBody NameRequest userRequest) {
@@ -50,7 +52,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.borrowBook(userId, bookId));
     }
     @PutMapping("{user_id}/return/{book_id}")
-    public ResponseEntity<String> returnBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId) throws CustomException {
-        return ResponseEntity.ok().body(userService.returnBook(userId, bookId));
+    public ResponseEntity<GeneralResponse<String>> returnBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId) throws CustomException {
+        userService.returnBook(userId, bookId);
+        return new ResponseEntity<>(new GeneralResponse<>("returned book successfully"), HttpStatusCode.valueOf(200));
     }
 }
