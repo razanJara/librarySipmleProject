@@ -3,6 +3,7 @@ package com.library.library.controller;
 import com.library.library.dto.request.BookRequest;
 import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.BookResponse;
+import com.library.library.dto.response.GeneralResponse;
 import com.library.library.servies.BookService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -21,20 +22,20 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/{book_id}")
-    public ResponseEntity<BookResponse> getBook(@PathVariable("book_id") int id){
-        return ResponseEntity.ok().body(bookService.getBook(id));
+    public ResponseEntity<GeneralResponse<BookResponse>> getBook(@PathVariable("book_id") int id){
+        return ResponseEntity.ok().body(new GeneralResponse<>(bookService.getBook(id)));
     }
     @PostMapping("/new_book")
-    public ResponseEntity<BookResponse> createBook(@Valid@RequestBody BookRequest bookRequest){
-        return ResponseEntity.ok().body(bookService.createBook(bookRequest));
+    public ResponseEntity<GeneralResponse<BookResponse>> createBook(@Valid@RequestBody BookRequest bookRequest){
+        return ResponseEntity.ok().body(new GeneralResponse<>(bookService.createBook(bookRequest)));
     }
     @GetMapping("/list")
     public ResponseEntity<List<BookResponse>> getAllBooks(){
         return ResponseEntity.ok().body(bookService.getAll());
     }
     @PutMapping("/update/{book_id}")
-    public ResponseEntity<String> updateName(@PathVariable("book_id") int id, @Valid@RequestBody NameRequest nameRequest){
+    public ResponseEntity<GeneralResponse<String>> updateName(@PathVariable("book_id") int id, @Valid@RequestBody NameRequest nameRequest){
         bookService.updateName(id, nameRequest);
-        return ResponseEntity.ok().body("done");
+        return ResponseEntity.ok().body(new GeneralResponse<>("done"));
     }
 }

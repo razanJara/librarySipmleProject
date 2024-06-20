@@ -3,6 +3,7 @@ package com.library.library.controller;
 import com.library.library.dto.request.AuthorRequest;
 import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.AuthorResponse;
+import com.library.library.dto.response.GeneralResponse;
 import com.library.library.servies.AuthorService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -20,20 +21,20 @@ import java.util.List;
 public class AuthorController {
     AuthorService authorService;
     @GetMapping("/list")
-    public ResponseEntity<List<AuthorResponse>> getAll(){
-        return ResponseEntity.ok().body(authorService.getAllAuthors());
+    public ResponseEntity<GeneralResponse<List<AuthorResponse>>> getAll(){
+        return ResponseEntity.ok().body(new GeneralResponse<>(authorService.getAllAuthors()));
     }
     @PostMapping("/new")
-    public ResponseEntity<String> createNewAuthor(@Valid @RequestBody AuthorRequest authorRequest){
-        return ResponseEntity.ok().body(authorService.createNewAuthor(authorRequest));
+    public ResponseEntity<GeneralResponse<String>> createNewAuthor(@Valid @RequestBody AuthorRequest authorRequest){
+        return ResponseEntity.ok().body(new GeneralResponse<>(authorService.createNewAuthor(authorRequest)));
     }
     @GetMapping("/{author_id}")
-    public ResponseEntity<AuthorResponse> getAuthor(@PathVariable("author_id") int id){
-        return ResponseEntity.ok().body(authorService.getAuthor(id));
+    public ResponseEntity<GeneralResponse<AuthorResponse>> getAuthor(@PathVariable("author_id") int id){
+        return ResponseEntity.ok().body(new GeneralResponse<>(authorService.getAuthor(id)));
     }
     @PutMapping("/update/{author_id}")
-    public ResponseEntity<String> updateName(@PathVariable("author_id") int id, @Valid @RequestBody NameRequest nameRequest){
+    public ResponseEntity<GeneralResponse<String>> updateName(@PathVariable("author_id") int id, @Valid @RequestBody NameRequest nameRequest){
         authorService.updateName(id, nameRequest);
-        return ResponseEntity.ok().body("done");
+        return ResponseEntity.ok().body(new GeneralResponse<>("done"));
     }
 }

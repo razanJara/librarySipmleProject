@@ -4,6 +4,7 @@ import com.library.library.dto.request.BookRequest;
 import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.BookResponse;
 import com.library.library.entity.Book;
+import com.library.library.exception.CustomException;
 import com.library.library.repository.AuthorRepository;
 import com.library.library.repository.BookRepository;
 import lombok.AccessLevel;
@@ -24,13 +25,13 @@ public class BookService {
 
     public BookResponse createBook(BookRequest bookRequest){
         Book book = modelMapper.map(bookRequest, Book.class);
-        book.setAuthor(authorRepository.findById(bookRequest.getAuthorId()).get());
+        book.setAuthor(authorRepository.findById(bookRequest.getAuthorId()).orElseThrow(()->new CustomException("the sent id does not exist",400)));
         bookRepository.save(book);
         return modelMapper.map(book, BookResponse.class);
     }
 
     public BookResponse getBook(int id) {
-        Book book = bookRepository.findById(id).get();
+        Book book = bookRepository.findById(id).orElseThrow(()->new CustomException("the sent id does not exist",400));
         return modelMapper.map(book, BookResponse.class);
     }
 
@@ -41,7 +42,7 @@ public class BookService {
                 .toList();
     }
     public void updateName(int id, NameRequest nameRequest) {
-        Book book = bookRepository.findById(id).get();
+        Book book = bookRepository.findById(id).orElseThrow(()->new CustomException("the sent id does not exist",400));
         book.setName(nameRequest.getName());
         bookRepository.save(book);
     }

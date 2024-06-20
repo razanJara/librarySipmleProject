@@ -33,23 +33,23 @@ public class UserController {
         return ResponseEntity.ok().body((new GeneralResponse<>(userService.getUser(id))));
     }
     @PostMapping("/new")
-    public ResponseEntity<UserResponse> createNewUser(@Valid @RequestBody NameRequest userRequest) {
+    public ResponseEntity<GeneralResponse<UserResponse>> createNewUser(@Valid @RequestBody NameRequest userRequest) {
         UserResponse userResponse = userService.createNewUser(userRequest);
-        return ResponseEntity.ok().body(userResponse);
+        return ResponseEntity.ok().body(new GeneralResponse<>(userResponse));
     }
     @PutMapping("/update/{user_id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable("user_id") int id, @Valid @RequestBody NameRequest userRequest) {
+    public ResponseEntity<GeneralResponse<UserResponse>> updateUser(@PathVariable("user_id") int id, @Valid @RequestBody NameRequest userRequest) {
         UserResponse userResponse = userService.updateUser(id, userRequest);
-        return ResponseEntity.ok().body(userResponse);
+        return ResponseEntity.ok().body(new GeneralResponse<>(userResponse));
     }
     @PutMapping("/status/{user_id}")
-    public ResponseEntity<UserResponse> updateStatus(@PathVariable("user_id") int id, @Valid @RequestBody StatusRequest statusRequest){
+    public ResponseEntity<GeneralResponse<UserResponse>> updateStatus(@PathVariable("user_id") int id, @Valid @RequestBody StatusRequest statusRequest){
         UserResponse userResponse = userService.updateStatus(id, statusRequest);
-        return ResponseEntity.ok().body(userResponse);
+        return ResponseEntity.ok().body(new GeneralResponse<>(userResponse));
     }
     @PutMapping("{user_id}/borrow/{book_id}")
-    public ResponseEntity<UserResponse> borrowBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId){
-        return ResponseEntity.ok().body(userService.borrowBook(userId, bookId));
+    public ResponseEntity<GeneralResponse<UserResponse>> borrowBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId){
+        return ResponseEntity.ok().body(new GeneralResponse<>(userService.borrowBook(userId, bookId)));
     }
     @PutMapping("{user_id}/return/{book_id}")
     public ResponseEntity<GeneralResponse<String>> returnBook(@PathVariable("user_id") int userId, @PathVariable("book_id") int bookId) throws CustomException {

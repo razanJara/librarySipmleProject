@@ -6,6 +6,7 @@ import com.library.library.dto.request.NameRequest;
 import com.library.library.dto.response.AuthorResponse;
 import com.library.library.entity.Author;
 import com.library.library.entity.Book;
+import com.library.library.exception.CustomException;
 import com.library.library.repository.AuthorRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,14 +49,14 @@ public class AuthorService {
     }
 
     public AuthorResponse getAuthor(int id) {
-        Author author = authorRepository.findById(id).get();
+        Author author = authorRepository.findById(id).orElseThrow(()->new CustomException("the sent id does not exist",400));
         AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
         authorResponse.setNumberOfBooks(author.getBooks().size());
         return authorResponse;
     }
 
     public void updateName(int id, NameRequest nameRequest) {
-        Author author = authorRepository.findById(id).get();
+        Author author = authorRepository.findById(id).orElseThrow(()->new CustomException("the sent id does not exist",400));
         author.setName(nameRequest.getName());
         authorRepository.save(author);
     }

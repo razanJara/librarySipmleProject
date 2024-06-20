@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public UserResponse getUser(int id) {
-        return getUserResponse(userRepository.findById(id).get());
+        return getUserResponse(userRepository.findById(id).orElseThrow(()-> new CustomException("the sent id does not exist", 400)));
     }
 
     public UserResponse createNewUser(NameRequest userRequest) {
@@ -52,33 +52,36 @@ public class UserService {
     }
 
     public UserResponse updateUser(int id, NameRequest userRequest) {
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElseThrow(()-> new CustomException("the sent id does not exist", 400));
         user.setName(userRequest.getName());
         userRepository.save(user);
         return getUserResponse(user);
     }
 
     public UserResponse updateStatus(int id, StatusRequest statusRequest) {
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElseThrow(()-> new CustomException("the sent id does not exist", 400));
         user.setStatus(statusRequest.getStatus().equals(Status.ACTIVE));
         userRepository.save(user);
         return getUserResponse(user);
     }
 
     public UserResponse borrowBook(int userId, int bookId) {
-        Book book = bookRepository.findById(bookId).get();
-        User user = userRepository.findById(userId).get();
+        Book book = bookRepository.findById(bookId).orElseThrow(()-> new CustomException("Book id not found", 400));
+        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException("the sent id does not exist", 400));
         book.setAvailable(false);
         book.setUser(user);
         Book savedBook = bookRepository.save(book);
         return getUserResponse(savedBook.getUser());
     }
 
-    public String returnBook(int userId, int bookId) throws CustomException{
+    public void returnBook(int userId, int bookId) throws CustomException{
+        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException("the sent id does not exist", 400));
         Book book = bookRepository.findById(bookId).orElseThrow(()-> new CustomException("Book id not found", 400));
+        if(!user.getBooks().contains(book)){
+            throw new CustomException("the user did not borrow the book", 400);
+        }
         book.setAvailable(true);
         book.setUser(null);
         bookRepository.save(book);
-        return "done";
     }
 }
