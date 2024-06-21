@@ -21,20 +21,20 @@ import java.util.List;
 public class AuthorController {
     AuthorService authorService;
     @GetMapping("/list")
-    public ResponseEntity<GeneralResponse<List<AuthorResponse>>> getAll(){
-        return ResponseEntity.ok().body(new GeneralResponse<>(authorService.getAllAuthors()));
+    public ResponseEntity<List<AuthorResponse>> getAll(){
+        return ResponseEntity.ok().body(authorService.getAllAuthors());
     }
     @PostMapping("/new")
-    public ResponseEntity<GeneralResponse<String>> createNewAuthor(@Valid @RequestBody AuthorRequest authorRequest){
-        return ResponseEntity.ok().body(new GeneralResponse<>(authorService.createNewAuthor(authorRequest)));
+    public ResponseEntity<GeneralResponse> createNewAuthor(@Valid @RequestBody AuthorRequest authorRequest){
+        return ResponseEntity.ok().body(new GeneralResponse(authorService.createNewAuthor(authorRequest)));
     }
     @GetMapping("/{author_id}")
-    public ResponseEntity<GeneralResponse<AuthorResponse>> getAuthor(@PathVariable("author_id") int id){
-        return ResponseEntity.ok().body(new GeneralResponse<>(authorService.getAuthor(id)));
+    public ResponseEntity<AuthorResponse> getAuthor(@PathVariable("author_id") int id){
+        return ResponseEntity.ok().body(authorService.getAuthor(id));
     }
     @PutMapping("/update/{author_id}")
-    public ResponseEntity<GeneralResponse<String>> updateName(@PathVariable("author_id") int id, @Valid @RequestBody NameRequest nameRequest){
+    public ResponseEntity<GeneralResponse> updateName(@PathVariable("author_id") int id, @Valid @RequestBody NameRequest nameRequest){
         authorService.updateName(id, nameRequest);
-        return ResponseEntity.ok().body(new GeneralResponse<>("done"));
+        return ResponseEntity.ok().body(new GeneralResponse("done"));
     }
 }

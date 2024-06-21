@@ -3,6 +3,7 @@ package com.library.library.servies;
 import com.library.library.Enum.Status;
 import com.library.library.dto.request.StatusRequest;
 import com.library.library.dto.request.NameRequest;
+import com.library.library.dto.request.UserRequest;
 import com.library.library.dto.response.BookResponse;
 import com.library.library.dto.response.UserResponse;
 import com.library.library.entity.Book;
@@ -14,6 +15,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +25,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UserService {
+public class UserService implements UserDetailsService {
     ModelMapper modelMapper;
     UserRepository userRepository;
     private final BookRepository bookRepository;
@@ -45,7 +49,7 @@ public class UserService {
         return getUserResponse(userRepository.findById(id).orElseThrow(()-> new CustomException("the sent id does not exist", 400)));
     }
 
-    public UserResponse createNewUser(NameRequest userRequest) {
+    public UserResponse createNewUser(UserRequest userRequest) {
         User user = modelMapper.map(userRequest, User.class);
         User savedUser = userRepository.save(user);
         return getUserResponse(savedUser);
@@ -83,5 +87,20 @@ public class UserService {
         book.setAvailable(true);
         book.setUser(null);
         bookRepository.save(book);
+    }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByName(username);
+        if(user == null){
+            throw new UsernameNotFoundException("User not found: " + username);
+        }
+        return org.springframework.security.core.userdetails.User.withUsername(user.getName())
+                .password(user.getPassword())
+                .authorities(user.getRole())
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
     }
 }

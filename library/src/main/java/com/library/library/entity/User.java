@@ -1,6 +1,8 @@
 package com.library.library.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +27,19 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Lob
+    @Column(name = "role")
+    private String role;
 
 }

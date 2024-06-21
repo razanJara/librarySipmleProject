@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GeneralResponse <T>{
-    private T response;
+public class GeneralResponse{
+    private String response;
 }
